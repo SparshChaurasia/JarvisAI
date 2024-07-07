@@ -1,12 +1,23 @@
-from dotenv import load_dotenv
-import google.generativeai as genai
 import os
 
-load_dotenv(".env")
+import google.ai.generativelanguage as glm
+import google.generativeai as genai
+from dotenv import dotenv_values
 
-genai.configure(api_key=API_KEY)
+from code_functions import get_datetime, open_apps, screenshot
 
-model = genai.GenerativeModel('gemini-1.5-flash')
+genai.configure(api_key=dotenv_values()["API_KEY"])
+model = genai.GenerativeModel('gemini-1.5-flash-latest', tools=[get_datetime, open_apps, screenshot])
 
-response = model.generate_content("Write a story about a AI and magic")
-print(response.text)
+if __name__ == "__main__":
+    print(model._tools.to_proto())
+    chat = model.start_chat(enable_automatic_function_calling=True)
+    while True:
+      try:
+        prompt = input("USER >> ")
+        print("------------------------------------------------------------")
+        response = chat.send_message(prompt)
+        print("AI >> ", response.text)
+        print("------------------------------------------------------------")
+      except KeyboardInterrupt:
+        break
