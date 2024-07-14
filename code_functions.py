@@ -30,7 +30,7 @@ def open_apps(app_name: str) -> None:
     pyautogui.press("super")
     time.sleep(0.1)
     pyautogui.typewrite(app_name)
-    time.sleep(0.1)
+    time.sleep(0.4)
     pyautogui.press("enter")
 
 def screenshot(**args) -> None:
@@ -42,10 +42,11 @@ def screenshot(**args) -> None:
     Returns:
         None
     """
-
-
-    img = pyautogui.screenshot()
-    img.save(DESKTOP_PATH)
+    n = 1
+    for f in os.listdir(DESKTOP_PATH):
+        if "screenshot" in f:
+            n += 1
+    pyautogui.screenshot(f"{DESKTOP_PATH}\screenshot{n}.png")
 
 def music():
     pass
