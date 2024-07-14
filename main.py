@@ -5,10 +5,10 @@ import google.generativeai as genai
 from google.generativeai.types.generation_types import StopCandidateException
 from dotenv import dotenv_values
 
-from code_functions import get_datetime, open_apps, screenshot, open_websites, shutdown
+from code_functions import get_datetime, open_apps, screenshot, open_websites, shutdown, add, multiply
 
 genai.configure(api_key=dotenv_values(".env")["API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash-latest', tools=[get_datetime, open_apps, screenshot, open_websites, shutdown])
+model = genai.GenerativeModel('gemini-1.5-flash-latest', tools=[get_datetime, open_apps, screenshot, open_websites, shutdown, add, multiply])
 
 
 if __name__ == "__main__":
