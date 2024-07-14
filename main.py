@@ -1,23 +1,20 @@
-import os
+import vertexai
+from vertexai.preview.generative_models import GenerativeModel, Part
 
-import google.ai.generativelanguage as glm
-import google.generativeai as genai
-from dotenv import dotenv_values
+PROJECT_ID = "bamboo-velocity-429404-u2"
 
-from code_functions import get_datetime, open_apps, screenshot
+vertexai.init(project=PROJECT_ID)
 
-genai.configure(api_key=dotenv_values()["API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-flash-latest', tools=[get_datetime, open_apps, screenshot])
+model = GenerativeModel("gemini-pro")
+chat = model.start_chat()
 
 if __name__ == "__main__":
-    print(model._tools.to_proto())
-    chat = model.start_chat(enable_automatic_function_calling=True)
     while True:
-      try:
-        prompt = input("USER >> ")
-        print("------------------------------------------------------------")
-        response = chat.send_message(prompt)
-        print("AI >> ", response.text)
-        print("------------------------------------------------------------")
-      except KeyboardInterrupt:
-        break
+        try: 
+            prompt = input("PROMPT >> ")
+            print()
+            response = chat.send_message(prompt)
+            print("RESPONSE >> ", response.candidates[0].content.parts[0].text)
+            print("-------------------------------------------------------------")
+        except KeyboardInterrupt:
+            break
