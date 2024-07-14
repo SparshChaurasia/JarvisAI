@@ -88,6 +88,7 @@ def add(numbers: list[int]) -> int:
     Returns:
         int: result
     """
+
     print(numbers)
     res = sum(numbers)
     return res
@@ -102,6 +103,7 @@ def multiply(numbers: list[int]) -> int:
         int: result
     """
 
+    print(numbers)
     res = 1
     for num in numbers:
         res *= num 
@@ -119,6 +121,7 @@ def subtract(number1: int, number2: int) -> int:
         int: result
     """
 
+    print(number1, number2)
     res = number2 - number1
     return res
 
@@ -133,5 +136,6 @@ def divide(number1: int, number2: int) -> int:
         int: result (quotient)
     """
 
+    print(number1, number2)
     res = number2 / number1
     return res
