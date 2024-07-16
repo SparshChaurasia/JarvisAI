@@ -14,7 +14,7 @@ from code_functions import (add, get_datetime, multiply, open_apps,
                             open_websites, screenshot, shutdown)
 
 genai.configure(api_key=dotenv_values(".env")["API_KEY"])
-model = genai.GenerativeModel('gemini-1.5-pro', tools=[get_datetime, open_apps, screenshot, open_websites, shutdown, add, multiply])
+model = genai.GenerativeModel('gemini-1.5-flash-latest', tools=[get_datetime, open_apps, screenshot, open_websites, shutdown, add, multiply])
 
 # Text to Speech engine congfiguration
 engine = pyttsx3.init()
@@ -58,43 +58,11 @@ def ai_response(prompt: str) -> None:
         engine.say("Inappropriate or harmful request")
         engine.runAndWait()
 
-if __name__ == "__main__":
-    chat = model.start_chat(enable_automatic_function_calling=True)
-    chat.send_message("You are an desktop AI assistant. Give short and helpful responses. Do not include markdown or emojis in your response.")
+def text_input_wrapper():
+    ai_response(inputtxt.get(1.0, "end-1c") )
+    inputtxt.delete(1.0, tk.END)
 
-    root = tk.Tk()
-    
-    w = 250 
-    h = 300
-    ws = root.winfo_screenwidth() 
-    hs = root.winfo_screenheight() 
-    x = ws - w
-    y = hs - h
-    root.geometry('%dx%d+%d+%d' % (w, h, x, y))
-    root.title("DesktopAssistant")
-    root.lift()
-    root.call('wm', 'attributes', '.', '-topmost', True)
-    root.resizable(False, False)
-    # root.overrideredirect(True)
-    
-    frame = tk.Frame(root)
-    frame.pack()
-
-    inputtxt = tk.Text(
-                    frame,
-                    height=5,
-                    width=20, 
-                    font=("Source Code Pro", 12),
-                    bg="white"
-                ) 
-  
-    inputtxt.grid(row=0, column=0, columnspan=2) 
-    
-    def text_input_wrapper():
-        ai_response(inputtxt.get(1.0, "end-1c") )
-        inputtxt.delete(1.0, tk.END)
-
-    def voice_input_wrapper():
+def voice_input_wrapper():
         def close_panel():
             label.destroy()
             close_btn.destroy()
@@ -105,7 +73,7 @@ if __name__ == "__main__":
             text="Listening...",
             width=20,
             height=12,
-            font=("Source Code Pro", 15),
+            font=("Source Code Pro", 15, "bold"),
         )
         close_btn = tk.Button(root, command=close_panel, text="x", width=2, height=1)
 
@@ -118,9 +86,53 @@ if __name__ == "__main__":
         ai_response(query)
         
 
+if __name__ == "__main__":
+    chat = model.start_chat(enable_automatic_function_calling=True)
+    chat.send_message("You are an desktop AI assistant. Give short and helpful responses. Do not include markdown or emojis in your response.")
+
+    root = tk.Tk()
+    
+    w = 250 
+    h = 300
+    ws = root.winfo_screenwidth() 
+    hs = root.winfo_screenheight() 
+    x = ws - w
+    y = hs - (h+30)
+    root.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    root.title("Desktop Assistant")
+    # root.configure(background="blue")
+    root.lift()
+    root.call('wm', 'attributes', '.', '-topmost', True)
+    root.resizable(False, False)
+    # root.overrideredirect(True)
+    
+    base_width = 65
+    img = Image.open("./media/chatbot-icon-removebg.png")
+    wpercent = (base_width / float(img.size[0]))
+    hsize = int((float(img.size[1]) * float(wpercent)))
+    img = img.resize((base_width, hsize), Image.Resampling.LANCZOS)
+    img = ImageTk.PhotoImage(img)
+
+    tk.Label(root, image=img).pack()
+    tk.Label(root, text="DESKTOP ASSISTANT", font=("Source Code Pro", 12, "bold")).pack()
+
+
+    frame = tk.Frame(root)
+    frame.pack()
+
+    inputtxt = tk.Text(
+                    frame,
+                    height=5,
+                    width=23, 
+                    font=("Source Code Pro", 12),
+                    bg="white"
+                ) 
+  
+    inputtxt.grid(row=0, column=0, columnspan=2, pady=15) 
+
     tk.Button(frame, text="RUN ⌨", font=("Source Code Pro", 12, "bold"), command=text_input_wrapper).grid(row=1, column=0, sticky="news")
     tk.Button(frame, text="VOICE 🔊", font=("Source Code Pro", 12, "bold"), command=voice_input_wrapper).grid(row=1, column=1, sticky="news")
-    tk.Button(frame, text="EXIT ❌", font=("Source Code Pro", 12, "bold"), command=root.destroy).grid(row=2, column=0, columnspan=2, sticky="news")
+    # tk.Button(frame, text="EXIT ❌", font=("Source Code Pro", 12, "bold"), command=root.destroy).grid(row=2, column=0, columnspan=2, sticky="news")
 
     root.mainloop()
     
