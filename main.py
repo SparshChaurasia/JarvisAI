@@ -26,6 +26,7 @@ volume = engine.getProperty('volume')
 engine.setProperty('volume', 1.0)
 engine.setProperty('rate',180)
 
+
 def voice_input() -> str:
     r = sr.Recognizer()
     with sr.Microphone() as source:
@@ -58,15 +59,17 @@ def ai_response(prompt: str) -> None:
         engine.say("Inappropriate or harmful request")
         engine.runAndWait()
 
-def text_input_wrapper():
+
+def text_input_wrapper(event=None):
+    # print(event)
     ai_response(inputtxt.get(1.0, "end-1c") )
     inputtxt.delete(1.0, tk.END)
+
 
 def voice_input_wrapper():
         def close_panel():
             label.destroy()
             close_btn.destroy()
-        
     
         label = tk.Label(
             root,
@@ -93,7 +96,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     
     w = 250 
-    h = 300
+    h = 270
     ws = root.winfo_screenwidth() 
     hs = root.winfo_screenheight() 
     x = ws - w
@@ -105,6 +108,7 @@ if __name__ == "__main__":
     root.call('wm', 'attributes', '.', '-topmost', True)
     root.resizable(False, False)
     # root.overrideredirect(True)
+    # root.bind_class("all", "<Ctrl+E>", root.iconify)
     
     base_width = 65
     img = Image.open("./media/chatbot-icon-removebg.png")
@@ -122,15 +126,16 @@ if __name__ == "__main__":
 
     inputtxt = tk.Text(
                     frame,
-                    height=5,
+                    height=2,
                     width=23, 
                     font=("Source Code Pro", 12),
                     bg="white"
                 ) 
-  
     inputtxt.grid(row=0, column=0, columnspan=2, pady=15) 
 
-    tk.Button(frame, text="RUN ⌨", font=("Source Code Pro", 12, "bold"), command=text_input_wrapper).grid(row=1, column=0, sticky="news")
+    run = tk.Button(frame, text="RUN ⌨", font=("Source Code Pro", 12, "bold"), command=text_input_wrapper)
+    run.grid(row=1, column=0, sticky="news")
+    root.bind("<Return>", text_input_wrapper)
     tk.Button(frame, text="VOICE 🔊", font=("Source Code Pro", 12, "bold"), command=voice_input_wrapper).grid(row=1, column=1, sticky="news")
     # tk.Button(frame, text="EXIT ❌", font=("Source Code Pro", 12, "bold"), command=root.destroy).grid(row=2, column=0, columnspan=2, sticky="news")
 
